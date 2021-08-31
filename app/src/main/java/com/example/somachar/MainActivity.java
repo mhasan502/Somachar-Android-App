@@ -65,6 +65,21 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
+    // Send information between Activity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+            if (requestCode == RECOGNIZER_RESULT) {         // Search news based on user speech
+                if (data != null) {
+                    ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    String result = matches.get(0);
+                    textView.setText(result);
+                    new FetchNews(this).execute(url + '/' + result);
+                    isSearchContent = true;
+                }
+            }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     // Initialization of speech engine
     @Override
     public void onInit(int status) {
@@ -102,8 +117,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         textToSpeech.stop();
         if (backPressedTime + 500 > System.currentTimeMillis()) {
             super.onBackPressed();
-        }
-        else {
+        } else {
             Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT).show();
             if (isSearchContent) {
                 new FetchNews(this).execute(url);
