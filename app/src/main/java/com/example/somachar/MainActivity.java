@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     TextToSpeech textToSpeech;
     SwipeRefreshLayout swipeRefreshLayout;
     ParticleView particleView;
-    String url = "https://somachar.herokuapp.com/api/news";
+    String url = "https://somachar.fly.dev/api/news";
 
 
     // Initialization of startup activity
