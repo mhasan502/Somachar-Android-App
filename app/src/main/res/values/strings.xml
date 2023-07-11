@@ -11,4 +11,5 @@
     <string name="login_failed">"Login failed"</string>
     <string name="bolun">বলুন</string>
     <string name="somachar">সমাচার</string>
+    <string name="image_related_to_news">Image Related to News</string>
 </resources>

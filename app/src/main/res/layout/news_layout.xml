@@ -56,11 +56,12 @@
             android:layout_height="142dp"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="0dp"
-            android:paddingLeft="0dp"
+            android:paddingStart="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/heading"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlSymmetry">
 
             <ImageButton
                 android:id="@+id/imageLink"
@@ -76,7 +77,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"
+                android:contentDescription="@string/image_related_to_news" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView

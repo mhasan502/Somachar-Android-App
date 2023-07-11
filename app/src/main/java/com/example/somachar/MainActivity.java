@@ -1,7 +1,6 @@
 package com.example.somachar;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -105,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     }
 
     // Action when the user will swipe
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh() {
         newsAdapter.notifyDataSetChanged();
@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     }
 
     // Action when the user will press back button
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onBackPressed() {
         textToSpeech.stop();

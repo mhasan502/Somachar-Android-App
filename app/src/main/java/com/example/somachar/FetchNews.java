@@ -22,13 +22,8 @@ import java.util.Locale;
 
 public class FetchNews extends AsyncTask<String, String, String> {
 
-    String data = "";
-    String heading;
-    String imagelink;
-    String newslink;
-    String papername;
-    String time;
-    String details;
+    StringBuilder data = new StringBuilder();
+    String heading, imagelink, newslink, papername, time, details;
 
 
     // Constructor
@@ -50,14 +45,15 @@ public class FetchNews extends AsyncTask<String, String, String> {
             String line = "";
             while (line != null) {
                 line = bufferedReader.readLine();
-                data = data + line;
+                System.out.println(line);
+                data.append(line);
             }
-            if (data.equals("[]null")) {
+            if (data.length() == 0) {
                 return null;
             }
             MainActivity.news.clear();
             try {
-                JSONArray JA = new JSONArray(data);
+                JSONArray JA = new JSONArray(data.toString());
                 for (int i = 0; i < JA.length(); i++) {         // Extract data from JSON
                     JSONObject JO = (JSONObject) JA.get(i);
 
@@ -95,10 +91,11 @@ public class FetchNews extends AsyncTask<String, String, String> {
     }
 
     // Result from background operation to MainActivity
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onPostExecute(String aVoid) {
         super.onPostExecute(aVoid);
-        if (data.equals("[]null")) {
+        if (data.length() == 0) {
             Toast.makeText(context, "দুঃখিত। কোনো ফলাফল পাওয়া যায়নি", Toast.LENGTH_LONG).show();
         }
         MainActivity.newsAdapter.notifyDataSetChanged();
