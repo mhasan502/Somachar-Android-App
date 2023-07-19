@@ -8,13 +8,11 @@ import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -79,17 +77,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    // Initialization of speech engine
-    @Override
-    public void onInit(int status) {
-        if (status == TextToSpeech.SUCCESS) {           // Check speech engine is available
-            textToSpeech.setLanguage(new Locale("bn_BD", "BD"));
-            textToSpeech.setSpeechRate(1);
-        } else if (status == TextToSpeech.ERROR) {
-            Toast.makeText(MainActivity.this, "Error occurred while initializing Text-To-Speech engine", Toast.LENGTH_LONG).show();
-        }
-    }
-
     // Speech listener
     public void speechToText(View view) {
         textToSpeech.stop();
@@ -103,17 +90,23 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         startActivityForResult(speechIntent, RECOGNIZER_RESULT);
     }
 
-    // Action when the user will swipe
-    @SuppressLint("NotifyDataSetChanged")
     @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {           // Check speech engine is available
+            textToSpeech.setLanguage(new Locale("bn_BD", "BD"));
+            textToSpeech.setSpeechRate(1);
+        } else if (status == TextToSpeech.ERROR) {
+            Toast.makeText(MainActivity.this, "Error occurred while initializing Text-To-Speech engine", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override @SuppressLint("NotifyDataSetChanged")
     public void onRefresh() {
         newsAdapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    // Action when the user will press back button
-    @SuppressLint("NotifyDataSetChanged")
-    @Override
+    @Override @SuppressLint("NotifyDataSetChanged")
     public void onBackPressed() {
         textToSpeech.stop();
         if (backPressedTime + 500 > System.currentTimeMillis()) {
@@ -129,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         backPressedTime = System.currentTimeMillis();
     }
 
-    // Action when the app will be on pause
     @Override
     public void onPause() {
         textToSpeech.stop();
@@ -137,19 +129,16 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         super.onPause();
     }
 
-    // Action after resuming from pause
     @Override
     public void onResume() {
         particleView.resume();
         super.onResume();
     }
 
-    // Action when the app will be stopped
     @Override
     public void onDestroy() {
         textToSpeech.stop();
         textToSpeech.shutdown();
         super.onDestroy();
     }
-
 }

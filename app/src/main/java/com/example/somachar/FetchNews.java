@@ -5,10 +5,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +21,7 @@ import java.util.Locale;
 public class FetchNews extends AsyncTask<String, String, String> {
 
     StringBuilder data = new StringBuilder();
-    String heading, imagelink, newslink, papername, time, details;
+    String heading, imageLink, newsLink, paperName, time, details;
 
 
     // Constructor
@@ -45,7 +43,6 @@ public class FetchNews extends AsyncTask<String, String, String> {
             String line = "";
             while (line != null) {
                 line = bufferedReader.readLine();
-                System.out.println(line);
                 data.append(line);
             }
             if (data.length() == 0) {
@@ -53,16 +50,16 @@ public class FetchNews extends AsyncTask<String, String, String> {
             }
             MainActivity.news.clear();
             try {
-                JSONArray JA = new JSONArray(data.toString());
-                for (int i = 0; i < JA.length(); i++) {         // Extract data from JSON
-                    JSONObject JO = (JSONObject) JA.get(i);
+                JSONArray jsonArray = new JSONArray(data.toString());
+                for (int i = 0; i < jsonArray.length(); i++) {         // Extract data from JSON
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
 
-                    heading = JO.get("heading").toString();
-                    imagelink = JO.get("imagelink").toString();
-                    newslink = JO.get("newslink").toString();
-                    papername = JO.get("papername").toString();
-                    time = JO.get("time").toString();
-                    details = JO.get("details").toString();
+                    heading = jsonObject.get("heading").toString();
+                    imageLink = jsonObject.get("imagelink").toString();
+                    newsLink = jsonObject.get("newslink").toString();
+                    paperName = jsonObject.get("papername").toString();
+                    time = jsonObject.get("time").toString();
+                    details = jsonObject.get("details").toString();
                     Log.e("Heading", heading);
 
                     // Date
@@ -70,15 +67,16 @@ public class FetchNews extends AsyncTask<String, String, String> {
                     String pattern = "yyyy-MM-dd'T'HH:mm:ss";
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, locale);
                     Date dt = simpleDateFormat.parse(time);
-                    assert dt != null;                      // asserts that the object is not null
 
                     DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
-                    String dates = dateFormat.format(dt);
                     DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT, locale);
+
+                    assert dt != null;
+                    String dates = dateFormat.format(dt);
                     String times = timeFormat.format(dt);
                     String date = times + "  " + dates;
 
-                    News item = new News(heading, imagelink, newslink, papername, date, details);
+                    News item = new News(heading, imageLink, newsLink, paperName, date, details);
                     MainActivity.news.add(item);
                 }
             } catch (Exception e) {
@@ -91,8 +89,7 @@ public class FetchNews extends AsyncTask<String, String, String> {
     }
 
     // Result from background operation to MainActivity
-    @SuppressLint("NotifyDataSetChanged")
-    @Override
+    @Override @SuppressLint("NotifyDataSetChanged")
     protected void onPostExecute(String aVoid) {
         super.onPostExecute(aVoid);
         if (data.length() == 0) {
