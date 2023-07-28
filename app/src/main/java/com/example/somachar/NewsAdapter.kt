@@ -20,6 +20,7 @@ class NewsAdapter(
     private val newsList: List<News>,
     private val textToSpeech: TextToSpeech
 ) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+
     // Meta data of each news
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val heading: TextView
@@ -46,32 +47,34 @@ class NewsAdapter(
     // Add contents in each news
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val news = newsList[position]
-        val headingText = holder.heading
-        headingText.text = news.getHeading()
-        val paperNameButton = holder.paperName
-        paperNameButton.text = news.getPaperName()
-        paperNameButton.setOnClickListener { v: View? ->
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(news.getNewsLink()))
+
+        val headingText: TextView = holder.heading
+        headingText.text = news.heading
+
+        val time: TextView = holder.textDate
+        time.text = news.time
+
+        val paperNameButton: Button = holder.paperName
+        paperNameButton.text = news.paperName
+        paperNameButton.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(news.newsLink))
             context.startActivity(browserIntent)
         }
+
         val imageLink: ImageView = holder.imageView
-        Picasso.get().load(news.getImageLink()).into(imageLink)
+        Picasso.get().load(news.imageLink).into(imageLink)
         imageLink.clipToOutline = true
         imageLink.setOnClickListener {
             if (textToSpeech.isSpeaking) {
                 Toast.makeText(context, "সংবাদটি বলা বন্ধ করা হয়েছে", Toast.LENGTH_SHORT).show()
                 textToSpeech.stop()
             } else {
-                Toast.makeText(context, news.getHeading(), Toast.LENGTH_SHORT).show()
-                textToSpeech.speak(news.getDetails(), TextToSpeech.QUEUE_FLUSH, null, null)
+                Toast.makeText(context, news.heading, Toast.LENGTH_SHORT).show()
+                textToSpeech.speak(news.details, TextToSpeech.QUEUE_FLUSH, null, null)
             }
         }
-        val time = holder.textDate
-        time.text = news.getTime()
     }
 
     // Total number of news
-    override fun getItemCount(): Int {
-        return newsList.size
-    }
+    override fun getItemCount() = newsList.size
 }

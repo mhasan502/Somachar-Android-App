@@ -1,100 +1,97 @@
-package com.example.somachar;
+package com.example.somachar
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.os.AsyncTask
+import android.util.Log
+import android.widget.Toast
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-public class FetchNews extends AsyncTask<String, String, String> {
+class FetchNews(
+    @field:SuppressLint("StaticFieldLeak") var context: Context
+) : AsyncTask<String?, String?, String?>() {
+    var data = StringBuilder()
 
-    StringBuilder data = new StringBuilder();
-    String heading, imageLink, newsLink, paperName, time, details;
-
-
-    // Constructor
-    @SuppressLint("StaticFieldLeak")
-    Context context;
-    public FetchNews (Context context) {
-        this.context = context;
-    }
+    private var heading: String? = null
+    private var imageLink: String? = null
+    private var newsLink: String? = null
+    private var paperName: String? = null
+    private var time: String? = null
+    private var details: String? = null
 
     // Background Operation
-    @Override
-    protected String doInBackground(String... Strings) {
+    @Deprecated("Deprecated in Java")
+    override fun doInBackground(vararg p0: String?): String? {
         try {
-            URL url = new URL(Strings[0]);
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            InputStream inputStream = httpURLConnection.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-            String line = "";
+            val url = URL(p0[0])
+            val httpURLConnection = url.openConnection() as HttpURLConnection
+            val inputStream = httpURLConnection.inputStream
+            val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+            var line: String? = ""
             while (line != null) {
-                line = bufferedReader.readLine();
-                data.append(line);
+                line = bufferedReader.readLine()
+                data.append(line)
             }
-            if (data.length() == 0) {
-                return null;
+            if (data.isEmpty()) {
+                return null
             }
-            MainActivity.news.clear();
-            try {
-                JSONArray jsonArray = new JSONArray(data.toString());
-                for (int i = 0; i < jsonArray.length(); i++) {         // Extract data from JSON
-                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+            MainActivity.news.clear()
 
-                    heading = jsonObject.get("heading").toString();
-                    imageLink = jsonObject.get("imagelink").toString();
-                    newsLink = jsonObject.get("newslink").toString();
-                    paperName = jsonObject.get("papername").toString();
-                    time = jsonObject.get("time").toString();
-                    details = jsonObject.get("details").toString();
-                    Log.e("Heading", heading);
+            try {
+                val jsonArray = JSONArray(data.toString())
+                for (i in 0 until jsonArray.length()) {         // Extract data from JSON
+                    val jsonObject = jsonArray[i] as JSONObject
+                    heading = jsonObject["heading"].toString()
+                    imageLink = jsonObject["imagelink"].toString()
+                    newsLink = jsonObject["newslink"].toString()
+                    paperName = jsonObject["papername"].toString()
+                    time = jsonObject["time"].toString()
+                    details = jsonObject["details"].toString()
+                    Log.e("Heading", heading!!)
 
                     // Date
-                    Locale locale = new Locale("en", "US");
-                    String pattern = "yyyy-MM-dd'T'HH:mm:ss";
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, locale);
-                    Date dt = simpleDateFormat.parse(time);
+                    val locale = Locale("en", "US")
+                    val pattern = "yyyy-MM-dd'T'HH:mm:ss"
+                    val dt = time?.let { SimpleDateFormat(pattern, locale).parse(it) }!!
 
-                    DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
-                    DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT, locale);
+                    val dateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT, locale)
+                    val timeFormat = DateFormat.getTimeInstance(DateFormat.DEFAULT, locale)
 
-                    assert dt != null;
-                    String dates = dateFormat.format(dt);
-                    String times = timeFormat.format(dt);
-                    String date = times + "  " + dates;
+                    val dates = dateFormat.format(dt)
+                    val times = timeFormat.format(dt)
 
-                    News item = new News(heading, imageLink, newsLink, paperName, date, details);
-                    MainActivity.news.add(item);
+                    val date = "$times  $dates"
+                    val item = News(heading!!, imageLink!!, newsLink!!, paperName!!, date, details!!)
+                    MainActivity.news.add(item)
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (e: IOException) {
+            e.printStackTrace()
         }
-        return null;
+        return null
     }
 
     // Result from background operation to MainActivity
-    @Override @SuppressLint("NotifyDataSetChanged")
-    protected void onPostExecute(String aVoid) {
-        super.onPostExecute(aVoid);
-        if (data.length() == 0) {
-            Toast.makeText(context, "দুঃখিত। কোনো ফলাফল পাওয়া যায়নি", Toast.LENGTH_LONG).show();
+    @Deprecated("Deprecated in Java")
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onPostExecute(aVoid: String?) {
+        super.onPostExecute(aVoid)
+
+        if (data.isEmpty()) {
+            Toast.makeText(context, "দুঃখিত। কোনো ফলাফল পাওয়া যায়নি", Toast.LENGTH_LONG).show()
         }
-        MainActivity.newsAdapter.notifyDataSetChanged();
+        MainActivity.newsAdapter!!.notifyDataSetChanged()
     }
+
 }
