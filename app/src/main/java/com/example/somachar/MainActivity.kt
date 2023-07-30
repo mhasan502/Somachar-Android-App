@@ -19,13 +19,13 @@ import java.util.Locale
 
 
 class MainActivity : AppCompatActivity(), OnInitListener, OnRefreshListener {
-    var backPressedTime: Long = 0
-    val RECOGNIZER_RESULT = 1
-    var textView: TextView? = null
-    var textToSpeech: TextToSpeech? = null
-    var swipeRefreshLayout: SwipeRefreshLayout? = null
-    var particleView: ParticleView? = null
-    var url = "https://somachar.fly.dev/api/news"
+    private var backPressedTime: Long = 0
+    private val RECOGNIZER_RESULT = 1
+    private var textView: TextView? = null
+    private var textToSpeech: TextToSpeech? = null
+    private var swipeRefreshLayout: SwipeRefreshLayout? = null
+    private var particleView: ParticleView? = null
+    private var url = "https://somachar.fly.dev/api/news"
 
 
     // Initialization of startup activity
